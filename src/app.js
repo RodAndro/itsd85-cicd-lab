@@ -11,7 +11,7 @@ export function add(a, b) {
     throw new TypeError('Both operands must be finite numbers.');
   }
 
-  const result = a + b;
+  const result = a - b;
   if (!Number.isFinite(result)) {
     throw new RangeError('The sum is outside the supported number range.');
   }
