@@ -49,7 +49,7 @@ app.get('/', (_request, response) => {
   </head>
   <body>
     <main>
-      <h1>ITSD 85 CI/CD Lab</h1>
+      <h1>ITSD 85 CI/CD Lab - Rodan</h1>
       <p>Application version: <strong id="app-version">${version}</strong></p>
     </main>
   </body>
