@@ -1,4 +1,4 @@
-# ITSD 85 Lab: Automated CI/CD Pipeline
+﻿# ITSD 85 Lab: Automated CI/CD Pipeline
 
 **Student(s):** Rodan
 **Section:** BSIT
@@ -40,7 +40,7 @@ curl 'http://localhost:3000/api/add?a=2&b=3'
 
 1. `test` runs on GitHub's `ubuntu-latest` runner: `npm ci`, `npm run lint`, `npm test`.
 2. `deploy` declares `needs: test`, so it only runs when the tests passed, and only for pushes to `main`.
-3. `deploy` targets `runs-on: [self-hosted, linux, deploy]` — the student's own Ubuntu server, whose runner polls GitHub outbound, so no public IP is required.
+3. `deploy` targets `runs-on: [self-hosted, linux, deploy]` â€” the student's own Ubuntu server, whose runner polls GitHub outbound, so no public IP is required.
 4. The image is tagged with `${APP_VERSION}`, set to `github.sha`, and `docker compose up -d --build --remove-orphans` replaces the running container.
 5. The health check retries `http://localhost:8080/health` until the payload contains the new commit SHA.
 
@@ -48,10 +48,12 @@ curl 'http://localhost:3000/api/add?a=2&b=3'
 
 | Test | Expected result | Actual result | Push-to-live time | Screenshot |
 |---|---|---|---|---|
-| A - good change | test pass, deploy pass, new name and commit ID live | | | |
-| B - broken change | test fail, merge blocked, server unchanged | | n/a | |
-| C - rollback (Method 1) | old content and a new commit ID live | | | |
-| C - rollback (Method 2) | previous commit ID live within seconds | | | |
+| A - good change | test pass, deploy pass, new name and commit ID live | test success, deploy success, `ITSD 85 CI/CD Lab - Rodan` live at SHA `6f63295` | 0 min 16 s | docs/screenshots/cp6-deploy-green.png |
+| B - broken change | test fail, merge blocked, server unchanged | test failed at `Run tests` (3 of 7 assertions), deploy skipped, merge rejected by ruleset: `Required status check "test" is failing` | n/a | docs/screenshots/cp7-test-red.png |
+| C - rollback (Method 1) | old content and a new commit ID live | reverted through the pipeline, good content live at SHA `92ea9be` | 0 min 22 s | docs/screenshots/cp8-rollback.png |
+| C - rollback (Method 2) | previous commit ID live within seconds | `APP_VERSION=<old-sha> docker compose up -d --no-build` restored SHA `6f63295` immediately | under 5 s | docs/screenshots/cp9-emergency.png |
+
+Mean push-to-live (n = 2 automated deploys): 19 s. Range: 16-22 s.
 
 ## Screenshots (links to docs/screenshots/)
 
